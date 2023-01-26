@@ -1,0 +1,28 @@
+from bit import Key
+from bit.network import satoshi_to_currency_cached
+import requests
+
+transactions = key.get_transactions()
+if(len(transactions) == 0):
+    pass
+try:
+    UserHistory.objects.get(txhash=str(transactions[0])) #
+except UserHistory.DoesNotExist:
+    for i in transactions:
+        r = 'https://blockchain.info/q/txresult/{0}/{1}'.format(TxHash,Address)
+        r = requests.get(r)
+        num = int(r.text)
+        if num > 0:
+            try:
+                UserHistory.objects.get(txhash=str(i))
+            except UserHistory.DoesNotExist:
+                #if dont have an any transaction
+                btcbal = Decimal(satoshi_to_currency_cached(num, 'btc'))
+                acc.btcbalance = acc.btcbalance + btcbal
+                acc.save()
+                uh = UserHistory(king=acc,txhash=str(i),value=num,currencyname="bitcoin")
+                uh.save()
+        else:
+           print("Negative number")
+    return render(request, "x.html", locals())
+print("nothing changed")
